@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Perfecto Cloud Administration Portal</title>
+    <script
+            src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <!-- Include the plugin's CSS and JS: -->
+    <script type="text/javascript" src="js/bootstrap-multiselect.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-multiselect.css" type="text/css"/>
+
+    <!-- My Java Script -->
+    <script src="javaScript.js"></script>
+
+
+    <style type="text/css">
+        #app {
+            margin: 20px;
+        }
+
+        #user-list {
+            /*			width: 150px;
+            */
+            float: left;
+        }
+
+        #filtered-user-list {
+            width: 48%;
+            float: right;
+            height: 400px;
+        }
+
+        .list-group {
+            border: 1px solid #ccc;
+        }
+
+        #user-filter-btn {
+            height: 34px;
+            width: 15%;
+        }
+
+        #user-filter-clear-btn {
+            height: 34px;
+            width: 15%;
+        }
+
+        #filter-users-drop-down {
+            width: 49%;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        #user-filter-input {
+            width: 70%;
+        }
+
+        #go-btn-container {
+            position: absolute;
+            margin-top: 150px;
+            left: 50%;
+            margin-left: -13px;
+        }
+
+        #go-btn {
+            background-color: lightblue;
+            border-radius: 25px;
+        }
+
+        #go-btn:hover {
+            background-color: #7ed0e8;
+        }
+
+        .roles {
+            width: 20%;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        #roles-panel-body {
+            height: 300px;
+            overflow: auto;
+        }
+
+        #user-defined-roles-input {
+            width: 100%;
+        }
+
+        #add-roles-page {
+            display: none;
+        }
+
+        #sign-in-page {
+            /*display: none;*/
+        }
+
+        .input-group-container {
+            max-width: 60%;
+            margin-left: 20%;
+            margin-top: 15%;
+        }
+
+        #sign-in-btn {
+            margin: 0 auto;
+            display: block;
+            margin-top: 20px;
+        }
+
+        /*		.input-group-addon {
+                    min-width:50px;
+                }*/
+        .page-header {
+            text-align: center;
+        }
+
+        .glyphicon {
+            font-size: 20px;
+        }
+
+        /*		:required  {
+                    background: url(https://cdn0.iconfinder.com/data/icons/fugue/icon/asterisk-small.png) no-repeat;
+                    background-position:right top;
+                }
+                */
+        .not-admin-alert {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .glyphicon.spinning {
+            animation: spin 1s infinite linear;
+            -webkit-animation: spin2 1s infinite linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: scale(1) rotate(0deg);
+            }
+            to {
+                transform: scale(1) rotate(360deg);
+            }
+        }
+
+        @-webkit-keyframes spin2 {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        .glyphicon-left {
+            margin-right: 7px;
+        }
+
+        /*		.btn.btn-default.operation-btn {
+                    width: 300px;
+                    height: 300px;
+                    margin-top: 10%;
+                    border-radius: 20px;
+                }
+                */
+        /*		.nav.nav-tabs.nav-justified {
+        }*/
+        /*		.active {
+                    : blue;
+                }*/
+        .nav-tabs > li > a:hover {
+            background-color: #303136 !important;
+            border: medium none;
+            border-radius: 0;
+            color: #fff;
+        }
+
+        .nav-tabs > li.active > a:hover {
+            color: #7ed0e8;
+        }
+
+        .nav > li > a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        /*		#add-roles-success-alert {
+                    display: none;
+                }*/
+
+        .success-popup {
+            transition: .3s ease all;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        #filtered-list-title {
+            width: 48%;
+            float: right;
+            text-align: center;
+            /*vertical-align: middle;*/
+            height: 34px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+
+        }
+
+        #filtered-list-title span {
+            display: block;
+            line-height: normal;
+            vertical-align: middle;
+            /*margin-top: -1%*/
+        }
+
+        #user-lists-headers {
+            border: none;
+        }
+
+        #exportJSON {
+            display: none;
+            font-weight: bold;
+        }
+        #export-json-panel {
+            text-align: center;
+            margin-bottom:30px;
+        }
+
+
+    </style>
+
+
+</head>
+<body>
+<div id="app">
+    <div id="sign-in-page">
+        <div class="page-header">
+            <h1 style="position: relative;"><img src="perfecto-mobile-logo.png" style="width:60px;height:60px;">Perfecto
+                Cloud Administration Portal<br/>
+                <small>Login with your cloud credentials. You must have admin privilegs in order to sign in
+                    successfully.
+                </small>
+            </h1>
+        </div>
+
+        <form onsubmit="return false">
+            <div class="input-group-container">
+                <div class="input-group">
+                    <span class="input-group-addon glyphicon glyphicon-cloud"></span>
+                    <input type="text" class="form-control login-input" id="cloud-input"
+                           placeholder="Domain, for example: public.perfectomobile.com" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon glyphicon glyphicon-envelope"></span>
+                    <input type="text" class="form-control login-input" id="username-input"
+                           placeholder="Username, for example: user@perfectomobile.com" required>
+                </div>
+
+                <div class="input-group">
+                    <span class="input-group-addon glyphicon glyphicon-lock"></span>
+                    <input type="password" class="form-control login-input" id="password-input"
+                           placeholder="Password, for example: 12345" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="sign-in-btn"
+                        data-loading-text="<span class='glyphicon-left glyphicon glyphicon-refresh spinning'></span>... Loading ...">
+                    SIGN IN
+                </button>
+
+
+                <div class="alert alert-danger not-admin-alert">
+                    <strong>Warning!</strong> User in not admin!
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="add-roles-page">
+        <div class="panel panel-default">
+            <ul class="nav nav-tabs" style="margin-bottom: 20px;">
+                <li id="add-roles-nav" role="presentation" class="active tabs" data-model="addRoles"><a href="#">Add
+                    Roles</a></li>
+                <li id="remove-roles-nav" role="presentation" class="tabs" data-model="removeRoles"><a href="#">Remove
+                    Roles</a></li>
+                <li id="edit-roles-nav" role="presentation" class="tabs" data-model="editRoles"><a href="#">Edit
+                    Roles</a></li>
+                <!-- <li role="presentation"><a href="#">Messages</a></li> -->
+            </ul>
+
+            <div class="panel-heading">User List</div>
+
+            <div class="panel-body" id="user-list-panel">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" class="check" id="checkAll"> Check All
+                    </label>
+                </div>
+                <div class="panel panel-default" id="user-lists-headers">
+                    <div class="panel-heading" id="filtered-list-title">
+                        <span>Selected Users</span>
+                    </div>
+
+                    <div class="input-group" id="filter-users-drop-down">
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false"><span id="user-filter-dropdown">Filter Users By</span><span
+                                    class="caret"></span></button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="user-filter-option" data-filter-key="companyName">Company
+                                    Name</a></li>
+                                <li><a href="#" class="user-filter-option" data-filter-key="groups">Groups</a></li>
+                                <li><a href="#" class="user-filter-option" data-filter-key="country">Country</a></li>
+                                <li><a href="#" class="user-filter-option" data-filter-key="username">User</a></li>
+
+                            </ul>
+                        </div><!-- /btn-group -->
+
+                        <div class="user-filter-input-container">
+                            <input type="text" placeholdera="Please Mind Casing" class="form-control"
+                                   id="user-filter-input" aria-label="...">
+                        </div>
+                        <button class="btn btn-default" type="button" id="user-filter-btn">Filter</button>
+                        <button class="btn btn-default" type="button" id="user-filter-clear-btn">Clear</button>
+                    </div><!-- /input-group -->
+                </div>
+
+                <div id="go-btn-container">
+                    <button id="go-btn">GO</button>
+                </div>
+
+                <ul class="list-group checked-list-box" id="user-list"></ul>
+                <ul class="list-group" id="filtered-user-list"></ul>
+            </div>
+
+            <div id="roles-panel">
+                <div class="panel-heading">Roles</div>
+                <div class="panel-body" id="roles-panel-body">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">System Defined Roles
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>ADMINISTRATOR</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>ADVANCED_AUTOMATION</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>AUTOMATION</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>AUTOMATION_ADMINISTRATOR</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>AUTOMATION_EXECUTION</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>DESKTOP_WEB</label>
+                        </div>
+
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>ECLIPSE</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>HANDSET_ADMINISTRATOR</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>HANDSET_VIEWER</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>HANDSET_ADMINISTRATOR</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>RESERVATION_ADMINISTRATOR</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>QTP</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>STATUS_FULL_VISIBILITY</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>STATUS_VISIBILITY</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>USAGE_REPORT</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>USAGE_REPORT</label>
+                        </div>
+                        <div class="roles">
+                            <input type="checkbox">
+                            <label>WIZARD</label>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">User Defined Roles
+                            <div class="user-defined-roles-container">
+                                <input type="text" id="user-defined-roles-input"
+                                       placeholder="Please insert comma separated list of EXISTING roles in your lab">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="export-json-panel" style="margin: 0 auto; height: auto" >
+                <span class="glyphicon glyphicon-download"></span>
+                <a id="exportJSON" class="btn"><i class="icon-download"></i> Export Json</a>
+            </div>
+            <div id="import-json-panel" style="text-align: center">
+
+                <form action="/action_page.php" >
+                    <span class="glyphicon glyphicon-upload" style="margin-left: 178px"></span>
+                    <input type="file" name="json" accept=".json,.txt" style="margin-left: 15px; display: inline;">
+                    <!--<input type="submit">-->
+                </form>
+            </div>
+            <div style="text-align: center; margin-bottom: 20px; margin-top: 20px">
+                <button id="add-roles-go-btn" class="btn btn-danger">ADD ROLES</button>
+            </div>
+
+            <!-- 			<div class="alert alert-success" id="add-roles-success-alert" role="alert">
+                            <strong>Success!</strong> Roles were successfully added to users.
+                        </div>
+                    -->
+
+            <div class="modal fade success-popup" id="add-roles-success-modal" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">×</span></button>
+                            <h4 class="modal-title"></h4>
+                        </div>
+                        <div class="modal-body text-center">
+                            <span id="add-roles-status-img" aria-hidden="true"></span>
+                            <!-- <img src="http://osmhotels.com//assets/check-true.jpg"> -->
+                            <p id="add-roles-status-text" class="lead"></p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
